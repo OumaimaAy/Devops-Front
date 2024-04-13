@@ -3,6 +3,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Facture } from '../shared/Model/Facture';
 import { FactureService } from '../shared/Service/Facture.service';
 
+//comment
 @Component({
   selector: 'app-facture',
   templateUrl: './facture.component.html',
