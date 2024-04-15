@@ -1,28 +1,20 @@
-# Étape de construction
-FROM node:12 AS builder
+FROM node:18 as build
+ENV NODE_OPTIONS=--openssl-legacy-provider
 
-WORKDIR /app
 
-# Copie des fichiers package.json et package-lock.json (si vous en avez un)
-COPY package*.json ./
+RUN mkdir -p /home/angular/front
 
-# Installation des dépendances
-RUN npm install
+WORKDIR /home/angular/front
 
-# Copie du reste des fichiers de l'application
 COPY . .
 
-# Construction de l'application
-RUN npm run build 
+RUN npm install --force
 
-# Étape de production
-FROM nginx:alpine
+RUN npm run build
 
-# Copie du build de l'étape précédente dans le répertoire nginx public
-COPY --from=builder /app/dist/crudtuto-Front /usr/share/nginx/html
-COPY ./nginx/etc/conf.d/default.conf /etc/nginx/conf/default.conf
-# Exposition du port 4600
-EXPOSE 4600
+FROM nginx:latest
+RUN rm -rf /usr/share/nginx/html/* && rm -rf /etc/nginx/nginx.conf
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /home/angular/front/dist/* /usr/share/nginx/html
 
-# Commande de démarrage pour Nginx
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 80
