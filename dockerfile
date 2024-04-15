@@ -19,7 +19,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copie du build de l'étape précédente dans le répertoire nginx public
-COPY --from=builder /app/dist/crud-tuto-front /usr/share/nginx/html
+COPY --from=builder /app/dist/crudtuto-Front /usr/share/nginx/html
 COPY ./nginx/etc/conf.d/default.conf /etc/nginx/conf/default.conf
 # Exposition du port 4600
 EXPOSE 4600
